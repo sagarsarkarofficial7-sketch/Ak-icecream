@@ -1,0 +1,125 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x", "rhel-openssl-3.0.x", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  name        String?
+  email       String?  @unique
+  password    String?
+  role        String   @default("admin")
+  permissions String   @default("[\"all\"]")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  description String?
+  image       String?
+  themeColor  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  bgImage     String?
+  products    Product[]
+}
+
+model Product {
+  id            String    @id @default(cuid())
+  name          String
+  description   String?
+  price         Float
+  options       String    @default("[]")
+  images        String    @default("[]")
+  categoryId    String?
+  inStock       Boolean   @default(true)
+  isRecommended Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  category      Category? @relation(fields: [categoryId], references: [id])
+}
+
+model HeroFlavor {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  subName     String
+  description String
+  folderPath  String
+  themeColor  String
+  gradient    String
+  features    String
+  totalFrames Int      @default(60)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model StoreLocation {
+  id        String   @id @default(cuid())
+  name      String
+  address   String
+  timing    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  image     String?
+  mapsLink  String?
+}
+
+model SocialPost {
+  id        String   @id @default(cuid())
+  imageUrl  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id              String   @id @default(cuid())
+  razorpayOrderId String   @unique
+  paymentId       String?
+  amount          Float
+  status          String   @default("pending")
+  customerName    String
+  customerEmail   String
+  customerPhone   String
+  shippingAddress String
+  items           String   @default("[]")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model PageContent {
+  id        String   @id @default(cuid())
+  pageSlug  String   @unique
+  content   String
+  updatedAt DateTime @updatedAt
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String?
+  content     String
+  coverImage  String?
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Inquiry {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+}

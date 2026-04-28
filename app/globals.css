@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background: #FFF8F5;
+    color: #111111;
+    overflow-x: hidden;
+  }
+  
+  /* Text Selection */
+  ::selection {
+    @apply bg-pink-500 text-white;
+  }
+}
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  /* Smooth Scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Glassmorphism Utilities */
+  .glass {
+    @apply bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl;
+  }
+  
+  .glass-dark {
+    @apply bg-black/20 backdrop-blur-xl border border-white/10 shadow-2xl;
+  }
+}
+
+/* Explicit Hardware Printing Configuration */
+@media print {
+  /* Hide absolutely everything recursively by default */
+  body * {
+    visibility: hidden;
+  }
+  
+  /* Force the active KOT block and its children into isolated visibility */
+  .kot-print-zone, .kot-print-zone * {
+    visibility: visible;
+  }
+  
+  /* Hard override exact CSS coordinates pushing content to top-left hardware margins */
+  .kot-print-zone {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 80mm !important; /* Generic standard thermal receipt width */
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    color: black !important; /* Force high contrast monochromatic thermal ink mapping */
+  }
+
+  /* Optional explicit hides inside print zone if buttons leak */
+  .kot-hide-print {
+    display: none !important;
+  }
+}
